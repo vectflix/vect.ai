@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Vect.ai | Peak AI Web Builder</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body { background: radial-gradient(circle at top, #1a1a2e 0%, #020205 100%); color: white; font-family: 'Inter', sans-serif; min-height: 100vh; margin: 0; overflow-x: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .ticker-wrap { overflow: hidden; white-space: nowrap; width: 100%; background: rgba(168, 85, 247, 0.1); border-bottom: 1px solid rgba(168, 85, 247, 0.2); }
+        .ticker-item { display: inline-block; padding: 10px 20px; font-size: 0.7rem; color: #a855f7; animation: ticker 40s linear infinite; }
+        @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+    </style>
+</head>
+<body>
+
+    <div class="ticker-wrap">
+        <div class="ticker-item uppercase font-black tracking-widest">
+            🚀 TRENDING: #1 Portfolio-Peak • #2 Eco-Store • NEW: AI Engine v4.2 Live • SYSTEM STATUS: PEAK
+        </div>
+    </div>
+
+    <nav class="p-4 lg:p-6 glass flex justify-between items-center sticky top-0 z-[90]">
+        <div class="flex items-center gap-2">
+            <i class="fas fa-rocket text-purple-500 text-xl lg:text-2xl"></i>
+            <span class="text-lg lg:text-xl font-black italic tracking-tighter">VECT.AI</span>
+        </div>
+        
+        <div class="flex-1 mx-4 lg:mx-8">
+            <div class="relative max-w-md mx-auto">
+                <i class="fas fa-search absolute left-3 top-2.5 text-gray-500 text-xs"></i>
+                <input type="text" placeholder="Search peak tools..." class="w-full bg-black/40 border border-white/10 rounded-full py-2 pl-9 pr-4 text-xs focus:outline-none focus:border-purple-500 transition text-white">
+            </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <i class="fas fa-user-circle text-xl lg:text-2xl cursor-pointer hover:text-purple-400"></i>
+        </div>
+    </nav>
+
+    <div id="root"></div>
+
+    <footer class="glass mt-20 p-8 lg:p-12">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 text-[10px] text-gray-500 uppercase font-bold tracking-widest">
+            <div>
+                <h3 class="text-white font-black mb-4 italic text-sm">VECT.AI_SYSTEMS</h3>
+                <p class="normal-case font-normal">Your code, hosted instantly, running at Peak performance.</p>
+            </div>
+            <div class="flex flex-col gap-3">
+                <h3 class="text-white">Legal & Account</h3>
+                <a href="#" class="hover:text-purple-400">Cookie Settings</a>
+                <a href="#" class="hover:text-purple-400">Privacy Policy</a>
+                <a href="#" class="hover:text-purple-400">My Account</a>
+            </div>
+            <div class="md:text-right flex flex-col md:justify-end">
+                <div class="flex items-center md:justify-end gap-2">
+                    <span class="h-2 w-2 bg-green-500 rounded-full animate-pulse"></span>
+                    <span class="font-bold text-white uppercase">System: Peak</span>
+                </div>
+                <p>© 2025 VECT_AI_CLOUD_OPS</p>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module" src="/src/main.jsx"></script>
+</body>
+</html>
