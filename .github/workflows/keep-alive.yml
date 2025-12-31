@@ -1,0 +1,15 @@
+name: Wake Up AI Engine
+on:
+  schedule:
+    - cron: '*/10 * * * *' # Pings every 10 minutes
+  workflow_dispatch: # Allows you to run it manually
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Wake Up Signal
+        run: |
+          curl -X POST https://vect-ai-engine.onrender.com/api/generate \
+          -H "Content-Type: application/json" \
+          -d '{"prompt": "ping"}'
