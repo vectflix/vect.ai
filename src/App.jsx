@@ -17,7 +17,6 @@ const App = () => {
   const [showSettings, setShowSettings] = useState(false);
   const [showBenefits, setShowBenefits] = useState(false);
 
-  // PWA Install Logic
   useEffect(() => {
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
@@ -31,11 +30,10 @@ const App = () => {
       const { outcome } = await deferredPrompt.userChoice;
       if (outcome === 'accepted') setDeferredPrompt(null);
     } else {
-      alert("Installation already complete or not supported by this browser.");
+      alert("System already installed or browsing in limited mode.");
     }
   };
 
-  // Usage Tracker Logic
   useEffect(() => {
     const currentMonth = new Date().getMonth();
     const lastReset = localStorage.getItem('peak_reset_month');
@@ -48,7 +46,6 @@ const App = () => {
     }
   }, []);
 
-  // Typing Effect Logic
   useEffect(() => {
     if (isGenerating && generatedCode) {
       let i = 0; setDisplayedCode("");
@@ -72,10 +69,7 @@ const App = () => {
         body: JSON.stringify({ prompt, isPro })
       });
       const data = await res.json();
-      
-      // PEAK CLEANER: Removes markdown backticks if AI includes them
       const cleanCode = data.code.replace(/```html|```jsx|```/g, "").trim();
-      
       setGeneratedCode(cleanCode);
       const newCount = genCount + 1;
       setGenCount(newCount);
@@ -87,6 +81,7 @@ const App = () => {
   };
 
   const previewDoc = `
+    <!DOCTYPE html>
     <html>
       <head><script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script></head>
       <body class="bg-white text-black p-4">${generatedCode}</body>
@@ -96,10 +91,10 @@ const App = () => {
   return (
     <div className="flex-1 p-4 lg:p-10 pb-20">
       <div className="max-w-7xl mx-auto flex justify-between items-center mb-6">
-        <button onClick={handleInstall} className="glass px-4 py-2 rounded-full text-[10px] font-bold text-white hover:bg-purple-600 transition flex items-center gap-2">
+        <button onClick={handleInstall} className="glass px-6 py-2 rounded-full text-[10px] font-black text-white hover:bg-purple-600 transition flex items-center gap-2">
            <i className="fas fa-download"></i> INSTALL APP
         </button>
-        <div onClick={() => setShowBenefits(true)} className="glass px-4 py-2 rounded-full text-[10px] font-bold cursor-pointer hover:border-purple-500 transition flex items-center gap-2">
+        <div onClick={() => setShowBenefits(true)} className="glass px-6 py-2 rounded-full text-[10px] font-black cursor-pointer hover:border-purple-500 transition flex items-center gap-2">
           <span>USAGE:</span> 
           <span className={genCount >= 5 ? "text-red-500" : "text-purple-400"}>
             {isPro ? "UNLIMITED" : `${genCount}/5`}
@@ -110,7 +105,7 @@ const App = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-7xl mx-auto">
         <div className="lg:col-span-4 glass p-6 rounded-[2.5rem] flex flex-col gap-6">
           <div className="flex justify-between items-center">
-            <h2 className="font-black italic text-white uppercase">Co-Pilot</h2>
+            <h2 className="font-black italic text-white uppercase tracking-tighter">Co-Pilot</h2>
             <i onClick={() => setShowSettings(true)} className="fas fa-sliders-h cursor-pointer text-white p-2 hover:bg-white/10 rounded-full transition"></i>
           </div>
           <textarea 
@@ -119,7 +114,7 @@ const App = () => {
             placeholder="Build something peak..."
             className="flex-1 min-h-[300px] bg-black/40 border border-white/5 rounded-3xl p-6 text-sm text-white outline-none focus:border-purple-500 transition"
           />
-          <button onClick={handleGenerate} className="w-full py-5 bg-purple-600 rounded-3xl font-black text-white hover:scale-[1.02] transition shadow-lg">
+          <button onClick={handleGenerate} className="w-full py-5 bg-purple-600 rounded-3xl font-black text-white hover:scale-[1.02] transition shadow-lg shadow-purple-500/20">
             {isGenerating ? "GENERATING..." : "GENERATE PEAK APP"}
           </button>
         </div>
