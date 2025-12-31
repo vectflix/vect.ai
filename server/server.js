@@ -6,31 +6,46 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 dotenv.config();
 
 const app = express();
-app.use(cors());
+
+// PEAK CORS: Allows your GitHub site to communicate with Render
+app.use(cors({
+  origin: "*",
+  methods: ["GET", "POST"]
+}));
+
 app.use(express.json());
 
-// FIXED: Use the variable name, not the key itself here. 
-// The actual key goes into Render's "Environment Variables" dashboard.
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const genAI = new GoogleGenerativeAI(process.env.AIzaSyAU_Q4CfGUdWHFU7fuLwXiCB1aAfh2bi3E);
 
 app.post('/api/generate', async (req, res) => {
   const { prompt } = req.body;
+  
+  if (!prompt) {
+    return res.status(400).json({ error: "Prompt is required" });
+  }
+
   try {
-    // Use gemini-1.5-flash for peak speed
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     
-    const result = await model.generateContent(`
-      You are the VECT.AI Engine. Create a professional web component for: ${prompt}. 
-      Return ONLY the HTML and Tailwind CSS code. No markdown, no backticks.
-    `);
-    
+    const peakPrompt = `
+      You are the VECT.AI Engine. 
+      Create a professional, modern web component for: ${prompt}. 
+      Return ONLY the HTML and Tailwind CSS code. 
+      Do not include explanations or markdown formatting.
+    `;
+
+    const result = await model.generateContent(peakPrompt);
     const response = await result.response;
-    res.json({ code: response.text() });
+    const text = response.text();
+
+    res.json({ code: text });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Engine error" });
+    console.error("PEAK_ENGINE_ERROR:", error);
+    res.status(500).json({ error: "AI Engine is currently overloaded." });
   }
 });
 
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, '0.0.0.0', () => console.log(`Server running on ${PORT}`));
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Peak Server running on port ${PORT}`);
+});
