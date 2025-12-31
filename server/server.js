@@ -11,6 +11,12 @@ app.use(express.json());
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
+// --- NEW KEEP-ALIVE ROUTE ---
+// This ensures your cron job gets a "200 OK" and stays green
+app.get('/', (req, res) => {
+  res.status(200).send("PEAK_ENGINE_ONLINE");
+});
+
 app.post('/api/generate', async (req, res) => {
   const { prompt } = req.body;
   try {
