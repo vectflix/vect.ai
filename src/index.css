@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Peak Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #020205;
+}
+::-webkit-scrollbar-thumb {
+  background: #9333ea;
+  border-radius: 10px;
+}
+
+/* Fix for mobile height issues */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
