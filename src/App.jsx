@@ -17,7 +17,7 @@ const App = () => {
   const [showSettings, setShowSettings] = useState(false);
   const [showBenefits, setShowBenefits] = useState(false);
 
-  // Logic to handle PWA installation
+  // PWA Install Logic
   useEffect(() => {
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
@@ -31,10 +31,11 @@ const App = () => {
       const { outcome } = await deferredPrompt.userChoice;
       if (outcome === 'accepted') setDeferredPrompt(null);
     } else {
-      alert("System already installed or browsing in limited mode.");
+      alert("Installation already complete or not supported by this browser.");
     }
   };
 
+  // Usage Tracker Logic
   useEffect(() => {
     const currentMonth = new Date().getMonth();
     const lastReset = localStorage.getItem('peak_reset_month');
@@ -47,6 +48,7 @@ const App = () => {
     }
   }, []);
 
+  // Typing Effect Logic
   useEffect(() => {
     if (isGenerating && generatedCode) {
       let i = 0; setDisplayedCode("");
@@ -70,20 +72,24 @@ const App = () => {
         body: JSON.stringify({ prompt, isPro })
       });
       const data = await res.json();
-      setGeneratedCode(data.code);
+      
+      // PEAK CLEANER: Removes markdown backticks if AI includes them
+      const cleanCode = data.code.replace(/```html|```jsx|```/g, "").trim();
+      
+      setGeneratedCode(cleanCode);
       const newCount = genCount + 1;
       setGenCount(newCount);
       localStorage.setItem('peak_gen_count', newCount.toString());
     } catch (e) {
-      setGeneratedCode("/* PEAK_ERROR: Engine waking up. Retry in 20s. Check Render logs. */");
+      setGeneratedCode("/* PEAK_ERROR: Engine waking up. Please retry in 30s. */");
       setIsGenerating(false);
     }
   };
 
   const previewDoc = `
     <html>
-      <head><script src="https://cdn.tailwindcss.com"></script></head>
-      <body class="bg-white text-black">${generatedCode}</body>
+      <head><script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script></head>
+      <body class="bg-white text-black p-4">${generatedCode}</body>
     </html>
   `;
 
@@ -101,7 +107,7 @@ const App = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-7xl mx-auto peak-grid-container">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-7xl mx-auto">
         <div className="lg:col-span-4 glass p-6 rounded-[2.5rem] flex flex-col gap-6">
           <div className="flex justify-between items-center">
             <h2 className="font-black italic text-white uppercase">Co-Pilot</h2>
@@ -113,7 +119,7 @@ const App = () => {
             placeholder="Build something peak..."
             className="flex-1 min-h-[300px] bg-black/40 border border-white/5 rounded-3xl p-6 text-sm text-white outline-none focus:border-purple-500 transition"
           />
-          <button onClick={handleGenerate} className="w-full py-5 bg-purple-600 rounded-3xl font-black text-white hover:scale-[1.02] transition shadow-lg shadow-purple-500/20">
+          <button onClick={handleGenerate} className="w-full py-5 bg-purple-600 rounded-3xl font-black text-white hover:scale-[1.02] transition shadow-lg">
             {isGenerating ? "GENERATING..." : "GENERATE PEAK APP"}
           </button>
         </div>
@@ -132,7 +138,7 @@ const App = () => {
                 )
             ) : (
                <div className="p-6">
-                 <pre className="text-[11px] text-purple-300 font-mono leading-relaxed"><code>{displayedCode || "// Code will appear here..."}</code></pre>
+                 <pre className="text-[11px] text-purple-300 font-mono leading-relaxed"><code>{displayedCode || "// Your code will appear here..."}</code></pre>
                </div>
             )}
           </div>
