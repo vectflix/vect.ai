@@ -6,46 +6,27 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 dotenv.config();
 
 const app = express();
-
-// PEAK CORS: Allows your GitHub site to communicate with Render
-app.use(cors({
-  origin: "*",
-  methods: ["GET", "POST"]
-}));
-
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 
-const genAI = new GoogleGenerativeAI(process.env.AIzaSyAU_Q4CfGUdWHFU7fuLwXiCB1aAfh2bi3E);
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 app.post('/api/generate', async (req, res) => {
   const { prompt } = req.body;
-  
-  if (!prompt) {
-    return res.status(400).json({ error: "Prompt is required" });
-  }
-
   try {
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    
-    const peakPrompt = `
-      You are the VECT.AI Engine. 
-      Create a professional, modern web component for: ${prompt}. 
-      Return ONLY the HTML and Tailwind CSS code. 
-      Do not include explanations or markdown formatting.
-    `;
-
-    const result = await model.generateContent(peakPrompt);
+    const result = await model.generateContent(`
+      Return ONLY the HTML/Tailwind CSS code for: ${prompt}. 
+      No conversational text, no backticks, no markdown. 
+      Ensure high-end design.
+    `);
     const response = await result.response;
-    const text = response.text();
-
-    res.json({ code: text });
+    res.json({ code: response.text() });
   } catch (error) {
-    console.error("PEAK_ENGINE_ERROR:", error);
-    res.status(500).json({ error: "AI Engine is currently overloaded." });
+    console.error(error);
+    res.status(500).json({ error: "Engine Error" });
   }
 });
 
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Peak Server running on port ${PORT}`);
-});
+app.listen(PORT, '0.0.0.0', () => console.log(`Server running on ${PORT}`));
