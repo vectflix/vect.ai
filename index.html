@@ -1,132 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
     <title>VECT.AI | PEAK ENGINE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap');
-        body { background-color: #020205; color: white; font-family: 'Inter', sans-serif; height: 100vh; margin: 0; overflow: hidden; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .peak-btn { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .peak-btn:active { scale: 0.95; }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: #9333ea; border-radius: 10px; }
-        iframe { background: white; border-radius: 1.5rem; }
-    </style>
-</head>
-<body class="flex flex-col">
-
-    <header class="p-6 flex justify-between items-center max-w-7xl mx-auto w-full">
-        <h1 class="font-900 italic text-2xl tracking-tighter uppercase">Vect.ai</h1>
-        <div class="glass px-4 py-2 rounded-full text-[10px] font-bold border-purple-500/30">
-            USAGE: <span id="usage-text" class="text-purple-400">0/5</span>
-        </div>
-    </header>
-
-    <main class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 p-6 max-w-7xl mx-auto w-full overflow-hidden">
-        
-        <div class="lg:col-span-4 flex flex-col gap-4 overflow-hidden">
-            <div class="glass p-6 rounded-[2.5rem] flex-1 flex flex-col gap-4">
-                <div class="flex justify-between items-center">
-                    <span class="text-[10px] font-black uppercase text-gray-500 tracking-widest">Co-Pilot Engine</span>
-                    <i class="fas fa-bolt text-purple-500"></i>
-                </div>
-                <textarea id="prompt-input" placeholder="Describe your peak component..." 
-                    class="w-full flex-1 bg-black/40 rounded-3xl p-4 text-sm outline-none border border-white/5 focus:border-purple-500 transition"></textarea>
-                <button id="generate-btn" class="peak-btn w-full py-5 bg-purple-600 rounded-3xl font-black uppercase text-xs tracking-widest shadow-lg shadow-purple-500/20">
-                    Generate Peak App
-                </button>
-            </div>
-        </div>
-
-        <div class="lg:col-span-8 glass rounded-[2.5rem] overflow-hidden flex flex-col">
-            <div class="p-4 border-b border-white/5 flex gap-4 bg-white/5">
-                <button onclick="setTab('preview')" id="btn-preview" class="text-[10px] font-black uppercase text-white">Preview</button>
-                <button onclick="setTab('code')" id="btn-code" class="text-[10px] font-black uppercase text-gray-500">Code</button>
-            </div>
-            <div id="preview-container" class="flex-1 p-4">
-                <iframe id="output-frame" class="w-full h-full border-none"></iframe>
-            </div>
-            <div id="code-container" class="flex-1 p-6 hidden overflow-auto">
-                <pre class="text-purple-300 font-mono text-[11px] leading-relaxed"><code id="code-output">// Neural output awaits...</code></pre>
-            </div>
-        </div>
-    </main>
-
-    <footer class="p-4 glass border-t border-white/10 flex justify-center gap-8 text-[9px] font-bold text-gray-500 uppercase tracking-widest">
-        <span>&copy; 2025 VECT.AI</span>
-        <span class="cursor-pointer hover:text-white">Cookies</span>
-        <span class="cursor-pointer hover:text-white">Privacy</span>
-        <span class="cursor-pointer hover:text-white tracking-normal">My Account</span>
-    </footer>
-
-    <script>
-        let genCount = localStorage.getItem('peak_count') || 0;
-        document.getElementById('usage-text').innerText = `${genCount}/5`;
-
-        async function generate() {
-            const prompt = document.getElementById('prompt-input').value;
-            const btn = document.getElementById('generate-btn');
-            
-            if (!prompt) return alert("Enter a prompt");
-            if (genCount >= 5) return alert("Limit reached. System locked.");
-
-            btn.innerText = "Processing...";
-            btn.style.opacity = "0.5";
-
-            try {
-                const response = await fetch('https://vect-ai.onrender.com/api/generate', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt })
-                });
-                
-                const data = await response.json();
-                const cleanCode = data.code.replace(/```html|```jsx|```/g, "").trim();
-
-                // Update UI
-                document.getElementById('code-output').innerText = cleanCode;
-                const frame = document.getElementById('output-frame');
-                const doc = `<html><head><script src="https://cdn.tailwindcss.com"><\/script></head><body>${cleanCode}</body></html>`;
-                frame.srcdoc = doc;
-
-                // Update Count
-                genCount++;
-                localStorage.setItem('peak_count', genCount);
-                document.getElementById('usage-text').innerText = `${genCount}/5`;
-                
-                setTab('preview');
-            } catch (err) {
-                alert("Engine waking up. Retry in 10 seconds.");
-            } finally {
-                btn.innerText = "Generate Peak App";
-                btn.style.opacity = "1";
-            }
-        }
-
-        function setTab(tab) {
-            const preview = document.getElementById('preview-container');
-            const code = document.getElementById('code-container');
-            const btnP = document.getElementById('btn-preview');
-            const btnC = document.getElementById('btn-code');
-
-            if (tab === 'preview') {
-                preview.classList.remove('hidden');
-                code.classList.add('hidden');
-                btnP.classList.replace('text-gray-500', 'text-white');
-                btnC.classList.replace('text-white', 'text-gray-500');
-            } else {
-                preview.classList.add('hidden');
-                code.classList.remove('hidden');
-                btnC.classList.replace('text-gray-500', 'text-white');
-                btnP.classList.replace('text-white', 'text-gray-500');
-            }
-        }
-
-        document.getElementById('generate-btn').addEventListener('click', generate);
-    </script>
-</body>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>
