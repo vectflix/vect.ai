@@ -1,0 +1,17 @@
+{
+  "name": "VECT.AI Peak Engine",
+  "short_name": "VectAI",
+  "description": "The high-performance AI web engine.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#020205",
+  "theme_color": "#9333ea",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2583/2583130.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
