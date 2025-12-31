@@ -2,21 +2,44 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #020205; /* Deep Black Peak Theme */
+  overflow-x: hidden;
+}
+
 /* Custom Peak Scrollbar */
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 6px;
 }
+
 ::-webkit-scrollbar-track {
   background: #020205;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #9333ea;
   border-radius: 10px;
 }
 
+::-webkit-scrollbar-thumb:hover {
+  background: #a855f7;
+}
+
+/* Glassmorphism Global Utility */
+.glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
 /* Fix for mobile height issues */
 html, body, #root {
   height: 100%;
-  margin: 0;
-  padding: 0;
 }
