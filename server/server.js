@@ -9,16 +9,25 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const genAI = new GoogleGenerativeAI(process.env.AIzaSyAU_Q4CfGUdWHFU7fuLwXiCB1aAfh2bi3E);
+// FIXED: Use the variable name, not the key itself here. 
+// The actual key goes into Render's "Environment Variables" dashboard.
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 app.post('/api/generate', async (req, res) => {
   const { prompt } = req.body;
   try {
+    // Use gemini-1.5-flash for peak speed
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    const result = await model.generateContent(`Create a high-end web component for: ${prompt}. Return only HTML/Tailwind code.`);
+    
+    const result = await model.generateContent(`
+      You are the VECT.AI Engine. Create a professional web component for: ${prompt}. 
+      Return ONLY the HTML and Tailwind CSS code. No markdown, no backticks.
+    `);
+    
     const response = await result.response;
     res.json({ code: response.text() });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Engine error" });
   }
 });
