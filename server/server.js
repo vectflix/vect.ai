@@ -1,0 +1,27 @@
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import { GoogleGenerativeAI } from '@google/generative-ai';
+
+dotenv.config();
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+const genAI = new GoogleGenerativeAI(process.env.AIzaSyAU_Q4CfGUdWHFU7fuLwXiCB1aAfh2bi3E);
+
+app.post('/api/generate', async (req, res) => {
+  const { prompt } = req.body;
+  try {
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const result = await model.generateContent(`Create a high-end web component for: ${prompt}. Return only HTML/Tailwind code.`);
+    const response = await result.response;
+    res.json({ code: response.text() });
+  } catch (error) {
+    res.status(500).json({ error: "Engine error" });
+  }
+});
+
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, '0.0.0.0', () => console.log(`Server running on ${PORT}`));
